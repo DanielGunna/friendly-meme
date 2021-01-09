@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teste_boticario/screens/login/login.dart';
 import 'package:teste_boticario/screens/signup.dart';
+import 'package:teste_boticario/screens/feed/feed.dart';
 
 class Routes {
   static const LOGIN = "/login";
@@ -22,7 +23,11 @@ class Routes {
           builder: (context) => SignUpScreen(),
         );
         break;
-
+      case Routes.FEED:
+        return MaterialPageRoute(
+          builder: (context) => FeedScreen(),
+        );
+        break;
       default:
         return MaterialPageRoute(
           builder: (context) => Scaffold(

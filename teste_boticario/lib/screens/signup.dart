@@ -11,7 +11,10 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: buildAppBar(), body: buildScreenContent(context));
+    return Scaffold(
+      appBar: buildAppBar(), 
+      body: buildScreenContent(context)
+      );
   }
 
   Widget buildScreenContent(BuildContext context) {

@@ -97,7 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget buildLoginButton() {
     return RoundedCornerButton(
       text: "Entrar",
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(context, Routes.getRoute(Routes.FEED));
+      },
     );
   }
 
