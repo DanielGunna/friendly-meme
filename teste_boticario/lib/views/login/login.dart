@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:teste_boticario/routes/routes.dart';
-import 'package:teste_boticario/screens/login/linear_background_widget.dart';
-import 'package:teste_boticario/screens/widgets/boticario_logo_widget.dart';
-import 'package:teste_boticario/screens/widgets/rounded_corner_buttom_widget.dart';
+import 'package:teste_boticario/views/login/linear_background_widget.dart';
+import 'package:teste_boticario/views/widgets/boticario_logo_widget.dart';
+import 'package:teste_boticario/views/widgets/rounded_corner_buttom_widget.dart';
+import 'package:teste_boticario/views/widgets/text_field_widget.dart';
 
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
         children: [
-          LinearBackgroundWidget(),
+          GradientBackgroundWidget(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6.0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [buildLoginForm(context), buildSignUpButtom()],
+                children: [buildLoginForm(context), buildSignUpButtom(context)],
               ),
             ),
           ),
@@ -42,9 +38,9 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               BoticarioLogoWidget(),
-              buildLoginField(),
+              buildEmailField(),
               buildPasswordField(),
-              buildLoginButton()
+              buildLoginButton(context)
             ],
           ),
         ),
@@ -57,44 +53,24 @@ class _LoginScreenState extends State<LoginScreen> {
           ? MediaQuery.of(context).size.height * 0.50
           : MediaQuery.of(context).size.height * 0.70;
 
-  Widget buildLoginField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: TextFormField(
-        keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-          labelText: "E-maill",
-        ),
-        validator: (value) {
-          if (value.isEmpty) {
-            return "Informe o e-mail por favor";
-          }
-          return null;
-        },
-      ),
+  Widget buildEmailField() {
+    return EditText(
+      hint: "Digite seu E-mail",
+      inputType: TextInputType.emailAddress,
+      emptyMessage: "Informe o e-mail por favor",
     );
   }
 
   Widget buildPasswordField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: TextFormField(
-        keyboardType: TextInputType.visiblePassword,
-        obscureText: true,
-        decoration: InputDecoration(
-          labelText: "Senha",
-        ),
-        validator: (value) {
-          if (value.isEmpty) {
-            return "É necessário informar a senha";
-          }
-          return null;
-        },
-      ),
+    return EditText(
+      hint: "Digite sua Senha",
+      inputType: TextInputType.visiblePassword,
+      obscureText: true,
+      emptyMessage: "É necessário informar a senha",
     );
   }
 
-  Widget buildLoginButton() {
+  Widget buildLoginButton(BuildContext context) {
     return RoundedCornerButton(
       text: "Entrar",
       onPressed: () {
@@ -103,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildSignUpButtom() {
+  Widget buildSignUpButtom(BuildContext context) {
     return Container(
       child: FlatButton(
         child: Text(

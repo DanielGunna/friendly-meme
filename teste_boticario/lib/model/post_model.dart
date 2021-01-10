@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:teste_boticario/model/user_model.dart';
 
-
 class PostModel {
   final String id, title, summary, body, imageURL;
   final DateTime postTime;
   final int reacts, views;
   final UserModel author;
+  final bool createdByUser;
 
   const PostModel({
     @required this.id,
@@ -18,6 +18,6 @@ class PostModel {
     @required this.postTime,
     @required this.reacts,
     @required this.views,
-   });
-
- }
+    @required this.createdByUser,
+  });
+}

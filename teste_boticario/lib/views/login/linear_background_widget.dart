@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class LinearBackgroundWidget extends StatelessWidget {
-  const LinearBackgroundWidget({
+class GradientBackgroundWidget extends StatelessWidget {
+  const GradientBackgroundWidget({
     Key key,
   }) : super(key: key);
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teste_boticario/screens/splash.dart';
+import 'package:teste_boticario/views/splash.dart';
 
 void main() {
   runApp(MyApp());

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:teste_boticario/screens/login/login.dart';
-import 'package:teste_boticario/screens/signup.dart';
-import 'package:teste_boticario/screens/feed/feed.dart';
+import 'package:teste_boticario/views/create_post.dart';
+import 'package:teste_boticario/views/login/login.dart';
+import 'package:teste_boticario/views/signup.dart';
+import 'package:teste_boticario/views/feed/feed.dart';
 
 class Routes {
   static const LOGIN = "/login";
   static const SIGNUP = "/signup";
   static const CREATE_POST = "/new_post";
   static const FEED = "/feed";
-  static const NEWS = "/news";
 
   static Route<dynamic> getRoute(String routeName) {
     switch (routeName) {
@@ -26,6 +26,11 @@ class Routes {
       case Routes.FEED:
         return MaterialPageRoute(
           builder: (context) => FeedScreen(),
+        );
+        break;
+      case Routes.CREATE_POST:
+        return MaterialPageRoute(
+          builder: (context) => CreatePostScreen(),
         );
         break;
       default:

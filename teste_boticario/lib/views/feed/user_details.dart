@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teste_boticario/model/user_model.dart';
-import 'package:teste_boticario/screens/widgets/inherited_user_model.dart';
+import 'package:teste_boticario/views/widgets/inherited_user_model.dart';
 
 class UserDetails extends StatelessWidget {
   final UserModel userData;
@@ -24,8 +24,8 @@ class _UserNameAndEmail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserModel userData = InheritedUserModel.of(context).userData;
-    final TextStyle nameTheme = Theme.of(context).textTheme.subtitle;
-    final TextStyle emailTheme = Theme.of(context).textTheme.body1;
+    final TextStyle nameTheme = Theme.of(context).textTheme.subtitle2;
+    final TextStyle emailTheme = Theme.of(context).textTheme.bodyText2;
     final int flex = 5;
 
     return Expanded(
