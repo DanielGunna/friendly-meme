@@ -8,7 +8,7 @@ class EditText extends StatefulWidget {
   final int maxLength;
   final bool hideLengthIndicator;
   final bool unlimitedLines;
-
+  Function onValidField = (String value) => {};
   EditText(
       {Key key,
       this.hideLengthIndicator = true,
@@ -17,6 +17,7 @@ class EditText extends StatefulWidget {
       this.unlimitedLines = false,
       this.emptyMessage = "Campo precisa ser preeenchido!",
       this.inputType = TextInputType.text,
+      this.onValidField,
       this.obscureText = false})
       : super(key: key);
 
@@ -47,6 +48,9 @@ class _EditTextState extends State<EditText> {
             return widget.emptyMessage;
           }
           return null;
+        },
+        onSaved: (value) {
+          widget.onValidField.call(value);
         },
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teste_boticario/model/user_model.dart';
+import 'package:teste_boticario/data/model/user_model.dart';
 
 class InheritedUserModel extends InheritedWidget {
   final UserModel userData;

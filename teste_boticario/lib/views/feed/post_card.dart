@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teste_boticario/model/post_model.dart';
+import 'package:teste_boticario/data/model/post_model.dart';
 import 'package:teste_boticario/views/widgets/inherited_post_model.dart';
 import 'package:teste_boticario/views/feed/user_details.dart';
 import 'post_stats.dart';

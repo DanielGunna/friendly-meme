@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:teste_boticario/utils/injection.dart';
 import 'package:teste_boticario/views/splash.dart';
 
-void main() {
+void main() async {
+  await setupInjection();
+  await injectionInstance.allReady();
   runApp(MyApp());
 }
 

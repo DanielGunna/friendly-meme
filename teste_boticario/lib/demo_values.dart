@@ -1,5 +1,6 @@
-import 'package:teste_boticario/model/post_model.dart';
-import 'package:teste_boticario/model/user_model.dart';
+import 'package:teste_boticario/data/model/post_model.dart';
+
+import 'data/model/user_model.dart';
 
 class DemoValues {
   static final List<UserModel> users = [
@@ -8,27 +9,18 @@ class DemoValues {
       name: "Ishfar",
       email: "ishfar@gmail.com",
       image: "assets/images/user.jpg",
-      followers: 123,
-      joined: DateTime(2019, 4, 30),
-      posts: 12,
     ),
     UserModel(
       id: "2",
       name: "Ishrak",
       email: "ishrak@gmail.com",
       image: "assets/images/user.jpg",
-      followers: 456,
-      joined: DateTime(2018, 5, 30),
-      posts: 13,
     ),
     UserModel(
       id: "3",
       name: "Shakleen",
       email: "shakleen@gmail.com",
       image: "assets/images/user.jpg",
-      followers: 789,
-      joined: DateTime(2017, 6, 30),
-      posts: 14,
     ),
   ];
 

@@ -17,4 +17,11 @@ class Commons {
       ),
     );
   }
+
+  static void showSnackBar(GlobalKey<ScaffoldState> key, String error) {
+    key.currentState.showSnackBar(SnackBar(
+      content: new Text('Erro: $error'),
+      duration: new Duration(seconds: 10),
+    ));
+  }
 }
