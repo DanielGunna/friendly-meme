@@ -18,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _loginController = inject<LoginController>();
   final _loginViewModel = inject<LoginViewModel>();
   final _formKey = GlobalKey<FormState>();
-  final _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -47,16 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget buildLoading() {
-    return Center(
-      child: Container(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white,
-        ),
       ),
     );
   }
@@ -94,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
               buildEmailField(),
               buildPasswordField(),
               _loginViewModel.isLoading
-                  ? buildLoading()
+                  ? Commons.buildLoading()
                   : buildLoginButton(context)
             ],
           ),

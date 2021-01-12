@@ -22,4 +22,11 @@ abstract class _UserStore with Store {
         .then((data) => userLogged = data);
     return result;
   }
+
+  @action
+  Future<UserModel> createUser(
+      String name, String password, String email) async {
+    var result = await repository.signUp(email, password, name);
+    return result;
+  }
 }

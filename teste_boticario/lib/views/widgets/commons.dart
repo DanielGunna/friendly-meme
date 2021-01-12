@@ -24,4 +24,14 @@ class Commons {
       duration: new Duration(seconds: 10),
     ));
   }
+
+  static Widget buildLoading() {
+    return Center(
+      child: Container(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+        ),
+      ),
+    );
+  }
 }

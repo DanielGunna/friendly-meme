@@ -16,6 +16,7 @@ import 'package:teste_boticario/stores/post_store.dart';
 import 'package:teste_boticario/stores/user_store.dart';
 import 'package:teste_boticario/utils/network_info.dart';
 import 'package:teste_boticario/views/viewmodels/login_viewmodel.dart';
+import 'package:teste_boticario/views/viewmodels/sign_up_viewmodel.dart';
 
 final injectionInstance = GetIt.instance;
 
@@ -35,6 +36,7 @@ T inject<T>() {
 // View Models
 void provideViewModels() {
   injectionInstance.registerFactory(() => LoginViewModel());
+  injectionInstance.registerFactory(() => SignUpViewModel());
 }
 
 // Controllers

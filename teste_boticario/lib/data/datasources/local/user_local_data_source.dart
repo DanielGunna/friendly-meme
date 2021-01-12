@@ -3,8 +3,8 @@ import 'package:teste_boticario/data/database/database.dart';
 import 'package:teste_boticario/data/entity/user_entity.dart';
 
 abstract class UserLocalDataSource {
-  Future<UserEntity> verifyUserExits(String email, String password);
-  Future<void> insertUser(UserEntity user);
+  Future<UserEntity> verifyUserExits(String userEmail, String userPassword);
+  Future<UserEntity> insertUser(UserEntity user);
 }
 
 class UserLocalSourceImpl implements UserLocalDataSource {
@@ -13,22 +13,24 @@ class UserLocalSourceImpl implements UserLocalDataSource {
   UserLocalSourceImpl({this.database});
 
   @override
-  Future<void> insertUser(UserEntity user) async {
+  Future<UserEntity> insertUser(UserEntity user) async {
     await database.insert(USER_TABLE, user.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+    return user;
   }
 
   @override
-  Future<UserEntity> verifyUserExits(String email, String password) async {
+  Future<UserEntity> verifyUserExits(
+      String userEmail, String userPassword) async {
     List<Map<String, dynamic>> values = await database.query(
       USER_TABLE,
-      where: 'email = ?',
-      whereArgs: [email],
+      where: '$USER_EMAIL_COLUMN = ?',
+      whereArgs: [userEmail],
     );
     if (values.isEmpty) {
       return Future.error("Usuário não encontrado!");
     } else {
-      UserEntity user = getUserWithInfos(values, password);
+      UserEntity user = getUserWithInfos(values, userPassword);
       if (user == null)
         return Future.error("Dados inválidos!");
       else
@@ -38,13 +40,14 @@ class UserLocalSourceImpl implements UserLocalDataSource {
 
   UserEntity getUserWithInfos(
       List<Map<String, dynamic>> values, String password) {
-    return List.generate(values.length, (index) {
-      return UserEntity.fromMap(
-        values[index],
-      );
-    }).firstWhere(
-      (user) => user.password == password,
+    var user = values.firstWhere(
+      (value) => value['password'].toString() == password,
       orElse: () => null,
     );
+
+    if (user != null)
+      return UserEntity.fromMap(user);
+    else
+      return null;
   }
 }

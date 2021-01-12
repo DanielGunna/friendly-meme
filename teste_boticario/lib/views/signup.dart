@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:teste_boticario/controllers/sign_up_controller.dart';
+import 'package:teste_boticario/routes/routes.dart';
+import 'package:teste_boticario/utils/injection.dart';
+import 'package:teste_boticario/views/viewmodels/sign_up_viewmodel.dart';
 import 'package:teste_boticario/views/widgets/rounded_corner_buttom_widget.dart';
 import 'package:teste_boticario/views/widgets/commons.dart';
 import 'package:teste_boticario/views/widgets/text_field_widget.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final _signupController = inject<SignUpController>();
+  final _signUpViewModel = inject<SignUpViewModel>();
+  final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _signupController.attachStateNotifier(() => setState(() {}));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: Commons.buildAppBar("Cadastre-se", context),
         body: buildScreenContent(context));
   }
@@ -49,6 +70,7 @@ class SignUpScreen extends StatelessWidget {
       child: Card(
         elevation: 8,
         child: Form(
+          key: _formKey,
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -59,7 +81,9 @@ class SignUpScreen extends StatelessWidget {
                 buildNameField(),
                 buildEmailField(),
                 buildPasswordField(),
-                buildSignUpButton(),
+                _signUpViewModel.isLoading
+                    ? Commons.buildLoading()
+                    : buildSignUpButton(),
               ],
             ),
           ),
@@ -73,6 +97,7 @@ class SignUpScreen extends StatelessWidget {
       hint: "Digite seu Nome",
       inputType: TextInputType.emailAddress,
       emptyMessage: "Informe seu nome por favor",
+      onValidField: (value) => _signUpViewModel.name = value,
     );
   }
 
@@ -81,6 +106,7 @@ class SignUpScreen extends StatelessWidget {
       hint: "Digite seu E-mail",
       inputType: TextInputType.emailAddress,
       emptyMessage: "Informe o e-mail por favor",
+      onValidField: (value) => _signUpViewModel.email = value,
     );
   }
 
@@ -90,13 +116,25 @@ class SignUpScreen extends StatelessWidget {
       inputType: TextInputType.visiblePassword,
       obscureText: true,
       emptyMessage: "É necessário informar a senha",
+      onValidField: (value) => _signUpViewModel.password = value,
     );
   }
 
   Widget buildSignUpButton() {
     return RoundedCornerButton(
       text: "Criar conta",
-      onPressed: () {},
+      onPressed: () {
+        if (_formKey.currentState.validate()) {
+          _formKey.currentState.save();
+          _signupController.createUser(_signUpViewModel).then((data) {
+            Navigator.pop(context);
+          }, onError: (error) {
+            Commons.showSnackBar(_scaffoldKey, error);
+          }).catchError((error) {
+            Commons.showSnackBar(_scaffoldKey, error);
+          });
+        }
+      },
     );
   }
 }
