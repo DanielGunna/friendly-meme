@@ -107,8 +107,10 @@ class LoginScreen extends StatelessWidget {
             _formKey.currentState.save();
             _loginController
                 .loginUser(_loginViewModel)
-                .then((data) => print("Deu certo"))
-                .catchError((error) => print("Deu errado"));
+                .then((data) => Navigator.pushReplacement(
+                    context, Routes.getRoute(Routes.FEED)))
+                .catchError(
+                    (error) => Commons.showSnackBar(_scaffoldKey, error));
           }
         },
       ),
