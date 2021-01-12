@@ -68,7 +68,12 @@ class _LoginScreenState extends State<LoginScreen> {
           "Cadastrar",
           style: TextStyle(color: Colors.white),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            Routes.getRoute(Routes.SIGNUP),
+          );
+        },
       ),
     );
   }
