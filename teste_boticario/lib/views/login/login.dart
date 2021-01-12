@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
           style: TextStyle(color: Colors.white),
         ),
         onPressed: () {
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             Routes.getRoute(Routes.SIGNUP),
           );
