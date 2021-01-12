@@ -29,7 +29,7 @@ mixin _$UserStore on _UserStore, Store {
   final _$loginUserAsyncAction = AsyncAction('loginUser');
 
   @override
-  Future<void> loginUser(String password, String email) {
+  Future<UserModel> loginUser(String password, String email) {
     return _$loginUserAsyncAction.run(() => super.loginUser(password, email));
   }
 }

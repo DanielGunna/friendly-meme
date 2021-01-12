@@ -16,7 +16,10 @@ abstract class _UserStore with Store {
   _UserStore({this.repository});
 
   @action
-  Future<void> loginUser(String password, String email) async {
-    await repository.login(email, password);
+  Future<UserModel> loginUser(String password, String email) async {
+    var result = await repository
+        .login(email, password)
+        .then((data) => userLogged = data);
+    return result;
   }
 }

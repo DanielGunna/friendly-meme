@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:teste_boticario/controllers/login_controller.dart';
 import 'package:teste_boticario/routes/routes.dart';
@@ -11,11 +9,22 @@ import 'package:teste_boticario/views/widgets/rounded_corner_buttom_widget.dart'
 import 'package:teste_boticario/views/widgets/text_field_widget.dart';
 import 'package:teste_boticario/views/widgets/commons.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _loginController = inject<LoginController>();
   final _loginViewModel = inject<LoginViewModel>();
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _loginController.attachStateNotifier(() => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +39,36 @@ class LoginScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [buildLoginForm(context), buildSignUpButtom(context)],
+                children: [
+                  buildLoginForm(context),
+                  buildSignUpButtom(context),
+                ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildLoading() {
+    return Center(
+      child: Container(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget buildSignUpButtom(BuildContext context) {
+    return Container(
+      child: FlatButton(
+        child: Text(
+          "Cadastrar",
+          style: TextStyle(color: Colors.white),
+        ),
+        onPressed: () {},
       ),
     );
   }
@@ -54,7 +88,9 @@ class LoginScreen extends StatelessWidget {
               BoticarioLogoWidget(),
               buildEmailField(),
               buildPasswordField(),
-              buildLoginButton(context)
+              _loginViewModel.isLoading
+                  ? buildLoading()
+                  : buildLoginButton(context)
             ],
           ),
         ),
@@ -90,30 +126,20 @@ class LoginScreen extends StatelessWidget {
     return RoundedCornerButton(
       text: "Entrar",
       onPressed: () {
-        Navigator.push(context, Routes.getRoute(Routes.FEED));
+        if (_formKey.currentState.validate()) {
+          _formKey.currentState.save();
+          _loginController.loginUser(_loginViewModel).then((data) {
+            Navigator.pushReplacement(
+              context,
+              Routes.getRoute(Routes.FEED),
+            );
+          }, onError: (error) {
+            Commons.showSnackBar(_scaffoldKey, error);
+          }).catchError((error) {
+            Commons.showSnackBar(_scaffoldKey, error);
+          });
+        }
       },
-    );
-  }
-
-  Widget buildSignUpButtom(BuildContext context) {
-    return Container(
-      child: FlatButton(
-        child: Text(
-          "Cadastrar",
-          style: TextStyle(color: Colors.white),
-        ),
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            _formKey.currentState.save();
-            _loginController
-                .loginUser(_loginViewModel)
-                .then((data) => Navigator.pushReplacement(
-                    context, Routes.getRoute(Routes.FEED)))
-                .catchError(
-                    (error) => Commons.showSnackBar(_scaffoldKey, error));
-          }
-        },
-      ),
     );
   }
 }

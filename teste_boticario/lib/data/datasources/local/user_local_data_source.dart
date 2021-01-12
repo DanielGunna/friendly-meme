@@ -22,7 +22,7 @@ class UserLocalSourceImpl implements UserLocalDataSource {
   Future<UserEntity> verifyUserExits(String email, String password) async {
     List<Map<String, dynamic>> values = await database.query(
       USER_TABLE,
-      where: " email ?",
+      where: 'email = ?',
       whereArgs: [email],
     );
     if (values.isEmpty) {
@@ -32,7 +32,7 @@ class UserLocalSourceImpl implements UserLocalDataSource {
       if (user == null)
         return Future.error("Dados inválidos!");
       else
-        return Future.value(user);
+        return user;
     }
   }
 
