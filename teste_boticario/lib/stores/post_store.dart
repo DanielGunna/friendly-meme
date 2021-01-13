@@ -31,7 +31,7 @@ abstract class _PostStore with Store {
   }
 
   @action
-  Future<void> editPost(PostModel postModel) async {
+  Future<PostModel> editPost(PostModel postModel) async {
     postStateFuture = ObservableFuture(repository.updatePost(postModel));
     final list = postsFuture.value;
     for (PostModel item in list) {
@@ -52,8 +52,6 @@ abstract class _PostStore with Store {
   @action
   Future<PostModel> createPost(String content) async {
     postStateFuture = ObservableFuture(repository.createPost(content));
-    var list = postsFuture.value;
-    list.add(postStateFuture.value);
     return postStateFuture;
   }
 

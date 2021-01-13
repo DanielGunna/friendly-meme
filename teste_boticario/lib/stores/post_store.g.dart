@@ -60,7 +60,7 @@ mixin _$PostStore on _PostStore, Store {
   final _$editPostAsyncAction = AsyncAction('editPost');
 
   @override
-  Future<void> editPost(PostModel postModel) {
+  Future<PostModel> editPost(PostModel postModel) {
     return _$editPostAsyncAction.run(() => super.editPost(postModel));
   }
 

@@ -52,8 +52,8 @@ void safePush(BuildContext context, String route) {
   });
 }
 
-void push(BuildContext context, String route) {
-  Navigator.push(context, Routes.getRoute(route, null));
+Future push(BuildContext context, String route) {
+  return Navigator.push(context, Routes.getRoute(route, null));
 }
 
 void safePushParam(BuildContext context, String route, dynamic param) {

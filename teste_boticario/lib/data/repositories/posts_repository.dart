@@ -13,7 +13,7 @@ abstract class PostRepository {
   Future<PostModel> createPost(String content);
   Future<List<PostModel>> getAllPosts();
   Future deletePost(String postId);
-  Future updatePost(PostModel post);
+  Future<PostModel> updatePost(PostModel post);
 }
 
 class PostRepositoryImpl extends PostRepository {
@@ -34,7 +34,8 @@ class PostRepositoryImpl extends PostRepository {
   Future<PostModel> createPost(String content) async {
     final currentUserId = preferences.getInt(PREFS_USER_ID_KEY);
     final entity = PostEntity(content: content, userId: currentUserId);
-    return fromPostEntityCreate(await localDataSource.createPost(entity));
+    return fromPostEntityCreate(await localDataSource.createPost(entity),
+        await userLocalDataSource.getUserById(currentUserId.toString()));
   }
 
   @override
@@ -60,7 +61,8 @@ class PostRepositoryImpl extends PostRepository {
   }
 
   @override
-  Future updatePost(PostModel post) async {
-    return await localDataSource.updatePost(toPostEntity(post));
+  Future<PostModel> updatePost(PostModel post) async {
+    await localDataSource.updatePost(toPostEntity(post));
+    return post;
   }
 }

@@ -18,7 +18,11 @@ class FeedScreen extends StatelessWidget {
     return Scaffold(
         appBar: buildAppBar("Feed", context),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => {push(context, Routes.CREATE_POST)},
+          onPressed: () => {
+            push(context, Routes.CREATE_POST).then((value) {
+              _feedController.getAllPosts();
+            })
+          },
           backgroundColor: Colors.orange,
           child: Icon(
             Icons.add,

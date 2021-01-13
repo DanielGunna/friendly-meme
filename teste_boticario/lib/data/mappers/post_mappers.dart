@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:teste_boticario/data/entity/post_entity.dart';
 import 'package:teste_boticario/data/entity/user_entity.dart';
 import 'package:teste_boticario/data/mappers/user_mappers.dart';
@@ -13,11 +15,13 @@ PostModel fromPostEntity(
         body: entity.content,
         postTime: entity.createdAt);
 
-PostModel fromPostEntityCreate(PostEntity entity) => PostModel(
-    id: entity.id.toString(),
-    createdByUser: true,
-    body: entity.content,
-    postTime: entity.createdAt);
+PostModel fromPostEntityCreate(PostEntity entity, UserEntity author) =>
+    PostModel(
+        id: entity.id.toString(),
+        createdByUser: true,
+        author: fromUserEntity(author),
+        body: entity.content,
+        postTime: entity.createdAt);
 
 PostModel fromPostResponse(NewsResponse response) => PostModel(
     id: "",
