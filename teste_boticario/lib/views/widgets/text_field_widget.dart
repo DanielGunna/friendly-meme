@@ -8,11 +8,13 @@ class EditText extends StatefulWidget {
   final int maxLength;
   final bool hideLengthIndicator;
   final bool unlimitedLines;
-  Function onValidField = (String value) => {};
+  final Function onValidField;
+  final String value;
   EditText(
       {Key key,
       this.hideLengthIndicator = true,
       this.hint,
+      this.value = "",
       this.maxLength = 100,
       this.unlimitedLines = false,
       this.emptyMessage = "Campo precisa ser preeenchido!",
@@ -31,6 +33,7 @@ class _EditTextState extends State<EditText> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: TextFormField(
+        initialValue: widget.value,
         maxLines: widget.unlimitedLines ? null : 1,
         maxLength: widget.maxLength,
         buildCounter: (BuildContext context,

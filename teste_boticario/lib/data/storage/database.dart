@@ -8,6 +8,10 @@ const String USER_NAME_COLUMN = 'name';
 const String USER_EMAIL_COLUMN = 'email';
 const String USER_PASS_COLUMN = 'password';
 const String USER_ID_COLUMN = 'id';
+const String POST_ID_COLUMN = 'id';
+const String POST_USER_ID_COLUMN = 'user_id';
+const String POST_CREATED_AT_COLUMN = 'created_at';
+const String POST_CONTENT_COLUMN = 'id';
 
 Future<Database> openDatabaseConnection() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +22,7 @@ Future<Database> openDatabaseConnection() async {
         "CREATE TABLE $USER_TABLE ($USER_ID_COLUMN INTEGER PRIMARY KEY, $USER_NAME_COLUMN TEXT, $USER_EMAIL_COLUMN TEXT, $USER_PASS_COLUMN TEXT)",
       );
       await db.execute(
-        "CREATE TABLE $POST_TABLE (id INTEGER PRIMARY KEY, content TEXT, user_id INTEGER,  created_at DATE DEFAULT (datetime('now','localtime')) )",
+        "CREATE TABLE $POST_TABLE ($POST_ID_COLUMN INTEGER PRIMARY KEY, $POST_CONTENT_COLUMN TEXT DEFAULT  NULL, $POST_USER_ID_COLUMN INTEGER DEFAULT  NULL,  $POST_CREATED_AT_COLUMN DATE DEFAULT (datetime('now','localtime')) )",
       );
     },
     version: 1,

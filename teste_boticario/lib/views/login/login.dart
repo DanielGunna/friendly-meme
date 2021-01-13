@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/src/api/async.dart';
 import 'package:teste_boticario/controllers/login_controller.dart';
+import 'package:teste_boticario/data/model/user_model.dart';
 import 'package:teste_boticario/routes/routes.dart';
 import 'package:teste_boticario/utils/injection.dart';
 import 'package:teste_boticario/views/login/linear_background_widget.dart';
@@ -28,27 +31,41 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          GradientBackgroundWidget(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6.0),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildLoginForm(context),
-                  buildSignUpButtom(context),
-                ],
+    return Observer(builder: (_) {
+      final loginFuture = _loginController.store.loginFuture;
+      switch (loginFuture.status) {
+        case FutureStatus.rejected:
+          showSnackBar(_scaffoldKey, loginFuture.error);
+          break;
+        case FutureStatus.fulfilled:
+          if (loginFuture.result != null)
+            safePushRelacement(context, Routes.FEED);
+          break;
+        default:
+          break;
+      }
+      return Scaffold(
+        key: _scaffoldKey,
+        body: Stack(
+          alignment: Alignment.center,
+          children: [
+            GradientBackgroundWidget(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildLoginForm(context),
+                    buildSignUpButtom(context),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget buildSignUpButtom(BuildContext context) {
@@ -59,10 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
           style: TextStyle(color: Colors.white),
         ),
         onPressed: () {
-          Navigator.push(
-            context,
-            Routes.getRoute(Routes.SIGNUP),
-          );
+          push(context, Routes.SIGNUP);
         },
       ),
     );
@@ -84,8 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
               buildEmailField(),
               buildPasswordField(),
               _loginViewModel.isLoading
-                  ? Commons.buildLoading()
-                  : buildLoginButton(context)
+                  ? buildLoading()
+                  : buildLoginButton(context),
             ],
           ),
         ),
@@ -123,16 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-          _loginController.loginUser(_loginViewModel).then((data) {
-            Navigator.pushReplacement(
-              context,
-              Routes.getRoute(Routes.FEED),
-            );
-          }, onError: (error) {
-            Commons.showSnackBar(_scaffoldKey, error);
-          }).catchError((error) {
-            Commons.showSnackBar(_scaffoldKey, error);
-          });
+          _loginController.loginUser(_loginViewModel);
         }
       },
     );

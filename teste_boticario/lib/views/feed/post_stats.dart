@@ -1,21 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:teste_boticario/routes/routes.dart';
+import 'package:teste_boticario/views/widgets/commons.dart';
+import 'package:teste_boticario/views/widgets/inherited_post_model.dart';
 
 class PostOptions extends StatelessWidget {
   const PostOptions({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = InheritedPostModel.of(context).feedController;
+    final data = InheritedPostModel.of(context).postData;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _ActionOption(
-          icon: Icons.delete,
-          color: Colors.red,
+        GestureDetector(
+          onTap: () {
+            controller.removePost(data);
+          },
+          child: _ActionOption(
+            icon: Icons.delete,
+            color: Colors.red,
+          ),
         ),
-        _ActionOption(
-          icon: Icons.edit,
-          color: Colors.green[900],
-        ),
+        GestureDetector(
+          onTap: () {
+            pushParam(context, Routes.CREATE_POST, data);
+          },
+          child: _ActionOption(
+            icon: Icons.edit,
+            color: Colors.green[900],
+          ),
+        )
       ],
     );
   }

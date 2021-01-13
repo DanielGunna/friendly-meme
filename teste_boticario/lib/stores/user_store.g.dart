@@ -26,10 +26,81 @@ mixin _$UserStore on _UserStore, Store {
     }, _$userLoggedAtom, name: '${_$userLoggedAtom.name}_set');
   }
 
+  final _$hasLoginAtom = Atom(name: '_UserStore.hasLogin');
+
+  @override
+  bool get hasLogin {
+    _$hasLoginAtom.context.enforceReadPolicy(_$hasLoginAtom);
+    _$hasLoginAtom.reportObserved();
+    return super.hasLogin;
+  }
+
+  @override
+  set hasLogin(bool value) {
+    _$hasLoginAtom.context.conditionallyRunInAction(() {
+      super.hasLogin = value;
+      _$hasLoginAtom.reportChanged();
+    }, _$hasLoginAtom, name: '${_$hasLoginAtom.name}_set');
+  }
+
+  final _$loginFutureAtom = Atom(name: '_UserStore.loginFuture');
+
+  @override
+  ObservableFuture<void> get loginFuture {
+    _$loginFutureAtom.context.enforceReadPolicy(_$loginFutureAtom);
+    _$loginFutureAtom.reportObserved();
+    return super.loginFuture;
+  }
+
+  @override
+  set loginFuture(ObservableFuture<void> value) {
+    _$loginFutureAtom.context.conditionallyRunInAction(() {
+      super.loginFuture = value;
+      _$loginFutureAtom.reportChanged();
+    }, _$loginFutureAtom, name: '${_$loginFutureAtom.name}_set');
+  }
+
+  final _$createUserFutureAtom = Atom(name: '_UserStore.createUserFuture');
+
+  @override
+  ObservableFuture<void> get createUserFuture {
+    _$createUserFutureAtom.context.enforceReadPolicy(_$createUserFutureAtom);
+    _$createUserFutureAtom.reportObserved();
+    return super.createUserFuture;
+  }
+
+  @override
+  set createUserFuture(ObservableFuture<void> value) {
+    _$createUserFutureAtom.context.conditionallyRunInAction(() {
+      super.createUserFuture = value;
+      _$createUserFutureAtom.reportChanged();
+    }, _$createUserFutureAtom, name: '${_$createUserFutureAtom.name}_set');
+  }
+
   final _$loginUserAsyncAction = AsyncAction('loginUser');
 
   @override
-  Future<UserModel> loginUser(String password, String email) {
+  Future<dynamic> loginUser(String password, String email) {
     return _$loginUserAsyncAction.run(() => super.loginUser(password, email));
+  }
+
+  final _$createUserAsyncAction = AsyncAction('createUser');
+
+  @override
+  Future<dynamic> createUser(String name, String password, String email) {
+    return _$createUserAsyncAction
+        .run(() => super.createUser(name, password, email));
+  }
+
+  final _$_UserStoreActionController = ActionController(name: '_UserStore');
+
+  @override
+  void checkHasLogin() {
+    final _$actionInfo = _$_UserStoreActionController.startAction();
+    try {
+      return super.checkHasLogin();
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
   }
 }

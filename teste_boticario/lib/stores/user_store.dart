@@ -11,22 +11,32 @@ class UserStore extends _UserStore with _$UserStore {
 abstract class _UserStore with Store {
   @observable
   UserModel userLogged;
+  @observable
+  bool hasLogin;
+
+  @observable
+  ObservableFuture<void> loginFuture = ObservableFuture.value(null);
+  @observable
+  ObservableFuture<void> createUserFuture = ObservableFuture.value(null);
 
   final UserRepository repository;
   _UserStore({this.repository});
 
   @action
-  Future<UserModel> loginUser(String password, String email) async {
-    var result = await repository
-        .login(email, password)
-        .then((data) => userLogged = data);
-    return result;
+  Future loginUser(String password, String email) async {
+    loginFuture = ObservableFuture(repository.login(email, password));
+    return loginFuture;
   }
 
   @action
-  Future<UserModel> createUser(
-      String name, String password, String email) async {
-    var result = await repository.signUp(email, password, name);
-    return result;
+  Future createUser(String name, String password, String email) async {
+    createUserFuture =
+        ObservableFuture(repository.signUp(email, password, name));
+    return createUserFuture;
+  }
+
+  @action
+  void checkHasLogin() {
+    hasLogin = repository.isUserLogged();
   }
 }

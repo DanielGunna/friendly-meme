@@ -10,7 +10,7 @@ class Routes {
   static const CREATE_POST = "/new_post";
   static const FEED = "/feed";
 
-  static Route<dynamic> getRoute(String routeName) {
+  static Route<dynamic> getRoute(String routeName, dynamic param) {
     switch (routeName) {
       case Routes.LOGIN:
         return MaterialPageRoute(
@@ -30,7 +30,9 @@ class Routes {
         break;
       case Routes.CREATE_POST:
         return MaterialPageRoute(
-          builder: (context) => CreatePostScreen(),
+          builder: (context) => CreatePostScreen(
+            postModel: param,
+          ),
         );
         break;
       default:
@@ -49,6 +51,6 @@ class Routes {
   }
 
   static Route<dynamic> generate(RouteSettings settings) {
-    return getRoute(settings.name);
+    return getRoute(settings.name, null);
   }
 }

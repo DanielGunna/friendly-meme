@@ -52,9 +52,10 @@ class _UserImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserModel userData = InheritedUserModel.of(context).userData;
+    print(userData.image);
     return Expanded(
       flex: 1,
-      child: CircleAvatar(backgroundImage: AssetImage(userData.image)),
+      child: CircleAvatar(backgroundImage: NetworkImage(userData.image)),
     );
   }
 }

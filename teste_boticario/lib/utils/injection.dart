@@ -1,20 +1,23 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:teste_boticario/controllers/create_post_controller.dart';
 import 'package:teste_boticario/controllers/feed_controller.dart';
 import 'package:teste_boticario/controllers/login_controller.dart';
 import 'package:teste_boticario/controllers/sign_up_controller.dart';
-import 'package:teste_boticario/data/database/database.dart';
 import 'package:teste_boticario/data/datasources/local/post_local_data_source.dart';
 import 'package:teste_boticario/data/datasources/local/user_local_data_source.dart';
 import 'package:teste_boticario/data/datasources/remote/post_remote_data_source.dart';
 import 'package:teste_boticario/data/repositories/posts_repository.dart';
 import 'package:teste_boticario/data/repositories/user_repository.dart';
+import 'package:teste_boticario/data/storage/database.dart';
+import 'package:teste_boticario/data/storage/preferences.dart';
 import 'package:teste_boticario/stores/post_store.dart';
 import 'package:teste_boticario/stores/user_store.dart';
 import 'package:teste_boticario/utils/network_info.dart';
+import 'package:teste_boticario/views/viewmodels/create_post_viewmodel.dart';
 import 'package:teste_boticario/views/viewmodels/login_viewmodel.dart';
 import 'package:teste_boticario/views/viewmodels/sign_up_viewmodel.dart';
 
@@ -37,6 +40,7 @@ T inject<T>() {
 void provideViewModels() {
   injectionInstance.registerFactory(() => LoginViewModel());
   injectionInstance.registerFactory(() => SignUpViewModel());
+  injectionInstance.registerFactory(() => CreatePostViewModel());
 }
 
 // Controllers
@@ -69,15 +73,17 @@ void provideRepositories() {
   injectionInstance.registerLazySingleton<PostRepository>(
     () => PostRepositoryImpl(
       remoteDataSource: injectionInstance(),
+      userLocalDataSource: injectionInstance(),
+      preferences: injectionInstance(),
       localDataSource: injectionInstance(),
       networkInfo: injectionInstance(),
     ),
   );
   injectionInstance.registerLazySingleton<UserRepository>(
     () => UserRepositoryImpl(
-      localDataSource: injectionInstance(),
-      networkInfo: injectionInstance(),
-    ),
+        localDataSource: injectionInstance(),
+        networkInfo: injectionInstance(),
+        preferences: injectionInstance()),
   );
 }
 
@@ -90,7 +96,7 @@ void provideDataSources() {
   );
 
   injectionInstance.registerLazySingleton<PostLocalDataSource>(
-    () => PostLocalSourceImpl(),
+    () => PostLocalDataSourceImpl(database: injectionInstance()),
   );
 
   injectionInstance.registerLazySingleton<UserLocalDataSource>(
@@ -104,7 +110,9 @@ void provideGeneral() {
       () => NetworkInfoImpl(dataConnectionChecker: injectionInstance()));
   //! External
   injectionInstance.registerLazySingleton(() => DataConnectionChecker());
-  injectionInstance.registerLazySingleton(() => http.Client);
+  injectionInstance.registerLazySingleton<http.Client>(() => http.Client());
   injectionInstance
       .registerSingletonAsync<Database>(() async => openDatabaseConnection());
+  injectionInstance.registerSingletonAsync<SharedPreferences>(
+      () async => getSharedPreferences());
 }

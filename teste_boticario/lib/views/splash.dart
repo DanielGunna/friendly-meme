@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:teste_boticario/routes/routes.dart';
+import 'package:teste_boticario/stores/user_store.dart';
+import 'package:teste_boticario/utils/injection.dart';
+import 'package:teste_boticario/views/widgets/commons.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -7,12 +12,12 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final _userStore = inject<UserStore>();
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacement(Routes.getRoute(Routes.LOGIN));
-    });
+    _userStore.checkHasLogin();
   }
 
   @override
@@ -20,6 +25,12 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
         body: Stack(
       children: [
+        Observer(
+          builder: (_) {
+            openNextScreen(_userStore.hasLogin, context);
+            return Container();
+          },
+        ),
         Center(child: Image.asset("assets/images/ic_logo.png")),
         Center(
             child: Padding(
@@ -35,5 +46,14 @@ class _SplashScreenState extends State<SplashScreen> {
         ))
       ],
     ));
+  }
+
+  void openNextScreen(bool hasLogin, BuildContext context) {
+    Future.delayed(const Duration(seconds: 3), () {
+      if (hasLogin)
+        pushReplacement(context, Routes.FEED);
+      else
+        pushReplacement(context, Routes.LOGIN);
+    });
   }
 }

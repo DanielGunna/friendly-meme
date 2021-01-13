@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:teste_boticario/controllers/sign_up_controller.dart';
 import 'package:teste_boticario/routes/routes.dart';
 import 'package:teste_boticario/utils/injection.dart';
@@ -26,10 +28,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldKey,
-        appBar: Commons.buildAppBar("Cadastre-se", context),
-        body: buildScreenContent(context));
+    return Observer(
+      builder: (_) {
+        final future = _signupController.store.createUserFuture;
+        switch (future.status) {
+          case FutureStatus.pending:
+            break;
+          case FutureStatus.rejected:
+            showSnackBar(_scaffoldKey, future.error);
+            break;
+          case FutureStatus.fulfilled:
+            if (future.result != null) safePop(context);
+            break;
+        }
+
+        return Scaffold(
+            key: _scaffoldKey,
+            appBar: buildAppBar("Cadastre-se", context),
+            body: buildScreenContent(context));
+      },
+    );
   }
 
   Widget buildScreenContent(BuildContext context) {
@@ -82,7 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 buildEmailField(),
                 buildPasswordField(),
                 _signUpViewModel.isLoading
-                    ? Commons.buildLoading()
+                    ? buildLoading()
                     : buildSignUpButton(),
               ],
             ),
@@ -126,13 +144,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-          _signupController.createUser(_signUpViewModel).then((data) {
-            Navigator.pop(context);
-          }, onError: (error) {
-            Commons.showSnackBar(_scaffoldKey, error);
-          }).catchError((error) {
-            Commons.showSnackBar(_scaffoldKey, error);
-          });
+          _signupController.createUser(_signUpViewModel);
         }
       },
     );

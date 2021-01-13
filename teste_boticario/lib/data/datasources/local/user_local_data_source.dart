@@ -1,10 +1,11 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:teste_boticario/data/database/database.dart';
 import 'package:teste_boticario/data/entity/user_entity.dart';
+import 'package:teste_boticario/data/storage/database.dart';
 
 abstract class UserLocalDataSource {
   Future<UserEntity> verifyUserExits(String userEmail, String userPassword);
   Future<UserEntity> insertUser(UserEntity user);
+  Future<UserEntity> getUserById(String id);
 }
 
 class UserLocalSourceImpl implements UserLocalDataSource {
@@ -27,21 +28,27 @@ class UserLocalSourceImpl implements UserLocalDataSource {
       where: '$USER_EMAIL_COLUMN = ?',
       whereArgs: [userEmail],
     );
-    if (values.isEmpty) {
-      return Future.error("Usuário não encontrado!");
-    } else {
-      UserEntity user = getUserWithInfos(values, userPassword);
-      if (user == null)
-        return Future.error("Dados inválidos!");
-      else
-        return user;
-    }
+    return verifyResult(values, (value) {
+      return value['password'].toString() == userPassword;
+    });
+  }
+
+  @override
+  Future<UserEntity> getUserById(String id) async {
+    List<Map<String, dynamic>> values = await database.query(
+      USER_TABLE,
+      where: '$USER_ID_COLUMN = ?',
+      whereArgs: [id],
+    );
+    return verifyResult(values, (value) {
+      return value['id'].toString() == id;
+    });
   }
 
   UserEntity getUserWithInfos(
-      List<Map<String, dynamic>> values, String password) {
+      List<Map<String, dynamic>> values, Function predicate) {
     var user = values.firstWhere(
-      (value) => value['password'].toString() == password,
+      (value) => predicate(value),
       orElse: () => null,
     );
 
@@ -49,5 +56,18 @@ class UserLocalSourceImpl implements UserLocalDataSource {
       return UserEntity.fromMap(user);
     else
       return null;
+  }
+
+  Future<UserEntity> verifyResult(
+      List<Map<String, dynamic>> values, Function predicate) async {
+    if (values.isEmpty) {
+      return Future.error("Usuário não encontrado!");
+    } else {
+      UserEntity user = getUserWithInfos(values, predicate);
+      if (user == null)
+        return Future.error("Usuário não encontrado!");
+      else
+        return user;
+    }
   }
 }

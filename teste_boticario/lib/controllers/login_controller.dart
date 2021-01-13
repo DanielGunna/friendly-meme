@@ -8,10 +8,10 @@ class LoginController extends BaseController {
 
   LoginController({this.store});
 
-  Future<UserModel> loginUser(LoginViewModel model) async {
+  void loginUser(LoginViewModel model) async {
     model.isLoading = true;
     onNotifyState();
-    return await store.loginUser(model.password, model.email).whenComplete(() {
+    await store.loginUser(model.password, model.email).whenComplete(() {
       model.isLoading = false;
       onNotifyState();
     });
